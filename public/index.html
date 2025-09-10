@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>超级做题家 - AI学习辅助工具</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/enhanced-styles.css">
+    <link rel="stylesheet" href="css/math-styles.css">
+    
+    <!-- MathJax配置 - 解决数学公式乱码问题 -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                tags: 'ams'
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="js/mathJaxConfig.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>超级做题家</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="#home" class="nav-link active">首页</a>
+                <a href="#upload" class="nav-link">上传材料</a>
+                <a href="#quiz" class="nav-link">开始练习</a>
+                <a href="#analysis" class="nav-link">学习分析</a>
+                <a href="#profile" class="nav-link">个人中心</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        <!-- 首页部分 -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <div class="hero-content animate__animated animate__fadeInUp">
+                    <h1>超级做题家</h1>
+                    <p class="hero-subtitle">AI驱动的智能学习辅助工具</p>
+                    <p class="hero-description">
+                        上传您的学习材料，让AI为您生成个性化的练习题目、模拟试卷，
+                        并提供智能批改和详细讲解，助您高效掌握知识点！
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="showSection('upload')">
+                            <i class="fas fa-upload"></i> 开始上传材料
+                        </button>
+                        <button class="btn btn-secondary" onclick="showSection('quiz')">
+                            <i class="fas fa-play"></i> 立即开始练习
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-features">
+                    <div class="feature-card animate__animated animate__fadeInLeft">
+                        <i class="fas fa-brain"></i>
+                        <h3>智能题目生成</h3>
+                        <p>基于您的学习材料，AI自动生成填空题、选择题、问答题</p>
+                    </div>
+                    <div class="feature-card animate__animated animate__fadeInUp">
+                        <i class="fas fa-robot"></i>
+                        <h3>自动批改讲解</h3>
+                        <p>AI自动批改答题结果，提供详细的解题思路和知识点讲解</p>
+                    </div>
+                    <div class="feature-card animate__animated animate__fadeInRight">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>错题强化练习</h3>
+                        <p>智能收集错题，生成针对性练习，帮您攻克薄弱环节</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 上传材料部分 -->
+        <section id="upload" class="section">
+            <div class="container">
+                <h2 class="section-title">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    上传学习材料
+                </h2>
+                <div class="upload-area">
+                    <!-- 增强上传区域 -->
+                    <div class="upload-zone enhanced" id="uploadZone">
+                        <div class="upload-icon">
+                            <i class="fas fa-file-upload"></i>
+                        </div>
+                        <h3>拖拽文件到此处或点击上传</h3>
+                        <p>支持 TXT、PDF、Word、Markdown、HTML 等格式</p>
+                        <div class="upload-features">
+                            <span class="feature-tag"><i class="fas fa-brain"></i> 智能分析</span>
+                            <span class="feature-tag"><i class="fas fa-cut"></i> 大文件分块</span>
+                            <span class="feature-tag"><i class="fas fa-chart-network"></i> 知识图谱</span>
+                        </div>
+                        <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.txt,.md,.html">
+                        <div class="upload-buttons">
+                            <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                                <i class="fas fa-file-plus"></i> 选择文件
+                            </button>
+                            <button class="btn btn-secondary" onclick="showUploadTips()">
+                                <i class="fas fa-info-circle"></i> 上传说明
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 文件大小提示 -->
+                    <div class="file-size-info">
+                        <div class="size-limit">
+                            <i class="fas fa-info-circle"></i>
+                            <span>最大支持 50MB 文件，大文件将自动进行智能分块处理</span>
+                        </div>
+                    </div>
+
+                    <!-- 基础上传进度 -->
+                    <div class="upload-progress" id="uploadProgress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <p id="progressText">上传中...</p>
+                    </div>
+                </div>
+
+                <!-- 上传提示模态框 -->
+                <div class="modal" id="uploadTipsModal" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3><i class="fas fa-lightbulb"></i> 智能上传说明</h3>
+                            <button class="modal-close" onclick="hideUploadTips()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="tips-section">
+                                <h4><i class="fas fa-file-alt"></i> 支持的文件格式</h4>
+                                <ul>
+                                    <li><strong>文本文件：</strong>TXT、MD（Markdown）、HTML</li>
+                                    <li><strong>文档文件：</strong>PDF、DOC、DOCX</li>
+                                    <li><strong>文件大小：</strong>最大 50MB</li>
+                                </ul>
+                            </div>
+                            <div class="tips-section">
+                                <h4><i class="fas fa-magic"></i> 智能处理功能</h4>
+                                <ul>
+                                    <li><strong>自动分块：</strong>大文件自动分割为合适的块进行处理</li>
+                                    <li><strong>内容分析：</strong>提取关键词、概念和知识点</li>
+                                    <li><strong>知识图谱：</strong>构建概念间的关联关系</li>
+                                    <li><strong>智能题目：</strong>基于内容生成高质量题目</li>
+                                </ul>
+                            </div>
+                            <div class="tips-section">
+                                <h4><i class="fas fa-clock"></i> 处理时间估算</h4>
+                                <ul>
+                                    <li><strong>小文件（&lt;1MB）：</strong>约 5-15 秒</li>
+                                    <li><strong>中等文件（1-5MB）：</strong>约 15-60 秒</li>
+                                    <li><strong>大文件（5-50MB）：</strong>约 1-5 分钟</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" onclick="hideUploadTips()">
+                                <i class="fas fa-check"></i> 我知道了
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="material-list" id="materialList">
+                    <h3>已上传的材料</h3>
+                    <div class="materials-grid" id="materialsGrid">
+                        <!-- 材料列表将在这里动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 练习部分 -->
+        <section id="quiz" class="section">
+            <div class="container">
+                <h2 class="section-title">
+                    <i class="fas fa-pencil-alt"></i>
+                    开始练习
+                </h2>
+                
+                <!-- 练习模式选择 -->
+                <div class="quiz-modes" id="quizModes">
+                    <div class="mode-card" onclick="startQuiz('fill-blank')">
+                        <i class="fas fa-edit"></i>
+                        <h3>填空练习</h3>
+                        <p>根据学习材料生成填空题，巩固关键知识点</p>
+                    </div>
+                    <div class="mode-card" onclick="startQuiz('multiple-choice')">
+                        <i class="fas fa-list-ul"></i>
+                        <h3>选择题练习</h3>
+                        <p>多选题和单选题练习，快速检验理解程度</p>
+                    </div>
+                    <div class="mode-card" onclick="startQuiz('essay')">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>问答题练习</h3>
+                        <p>开放性问题练习，深度理解和表达能力训练</p>
+                    </div>
+                    <div class="mode-card" onclick="startQuiz('mock-exam')">
+                        <i class="fas fa-clipboard-check"></i>
+                        <h3>模拟考试</h3>
+                        <p>综合性模拟试卷，全面检测学习效果</p>
+                    </div>
+                </div>
+
+                <!-- 练习界面 -->
+                <div class="quiz-container" id="quizContainer" style="display: none;">
+                    <div class="quiz-header">
+                        <div class="quiz-info">
+                            <span id="quizTitle">练习模式</span>
+                            <span class="quiz-progress">
+                                第 <span id="currentQuestion">1</span> 题 / 共 <span id="totalQuestions">10</span> 题
+                            </span>
+                        </div>
+                        <div class="quiz-timer">
+                            <i class="fas fa-clock"></i>
+                            <span id="timer">00:00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container" id="questionContainer">
+                        <!-- 题目内容将在这里动态生成 -->
+                    </div>
+                    
+                    <div class="quiz-controls">
+                        <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()">
+                            <i class="fas fa-chevron-left"></i> 上一题
+                        </button>
+                        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">
+                            下一题 <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <button class="btn btn-success" id="submitBtn" onclick="submitQuiz()" style="display: none;">
+                            <i class="fas fa-check"></i> 提交答案
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 结果展示 -->
+                <div class="quiz-result" id="quizResult" style="display: none;">
+                    <div class="result-header">
+                        <h3>练习结果</h3>
+                        <div class="score-display">
+                            <div class="score-circle">
+                                <span id="scoreText">85</span>
+                                <small>分</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-check-circle text-success"></i>
+                            <span>正确: <strong id="correctCount">8</strong></span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-times-circle text-danger"></i>
+                            <span>错误: <strong id="wrongCount">2</strong></span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <span>用时: <strong id="totalTime">05:32</strong></span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-actions">
+                        <button class="btn btn-primary" onclick="reviewAnswers()">
+                            <i class="fas fa-eye"></i> 查看详解
+                        </button>
+                        <button class="btn btn-secondary" onclick="practiceWrongQuestions()">
+                            <i class="fas fa-redo"></i> 错题练习
+                        </button>
+                        <button class="btn btn-success" onclick="startNewQuiz()">
+                            <i class="fas fa-plus"></i> 新的练习
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 学习分析部分 -->
+        <section id="analysis" class="section">
+            <div class="container">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-bar"></i>
+                    学习分析
+                </h2>
+                
+                <div class="analysis-dashboard">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalScore">85.6</h3>
+                                <p>平均分数</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalQuizzes">24</h3>
+                                <p>完成练习</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="studyStreak">7</h3>
+                                <p>连续学习天数</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="wrongQuestions">12</h3>
+                                <p>待复习错题</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="charts-container">
+                        <div class="chart-card">
+                            <h3>学习进度趋势</h3>
+                            <canvas id="progressChart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <h3>知识点掌握情况</h3>
+                            <canvas id="knowledgeChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="wrong-questions-section">
+                        <h3>错题本</h3>
+                        <div class="wrong-questions-list" id="wrongQuestionsList">
+                            <!-- 错题列表将在这里动态生成 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 个人中心部分 -->
+        <section id="profile" class="section">
+            <div class="container">
+                <h2 class="section-title">
+                    <i class="fas fa-user"></i>
+                    个人中心
+                </h2>
+                
+                <div class="profile-container">
+                    <div class="profile-sidebar">
+                        <div class="profile-avatar">
+                            <img src="https://via.placeholder.com/120" alt="头像" id="avatarImg">
+                            <button class="btn btn-sm btn-primary">更换头像</button>
+                        </div>
+                        <div class="profile-info">
+                            <h3 id="userName">学习者</h3>
+                            <p id="userEmail">user@example.com</p>
+                            <div class="user-level">
+                                <span class="level-badge">Lv.5</span>
+                                <div class="level-progress">
+                                    <div class="level-fill" style="width: 60%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-content">
+                        <div class="profile-tabs">
+                            <button class="tab-btn active" onclick="showProfileTab('settings')">账户设置</button>
+                            <button class="tab-btn" onclick="showProfileTab('history')">学习历史</button>
+                            <button class="tab-btn" onclick="showProfileTab('achievements')">成就徽章</button>
+                        </div>
+                        
+                        <div class="tab-content">
+                            <div id="settings" class="tab-pane active">
+                                <form class="settings-form">
+                                    <div class="form-group">
+                                        <label>用户名</label>
+                                        <input type="text" class="form-control" value="学习者">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>邮箱</label>
+                                        <input type="email" class="form-control" value="user@example.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>学习目标</label>
+                                        <select class="form-control">
+                                            <option>提高考试成绩</option>
+                                            <option>掌握专业知识</option>
+                                            <option>兴趣学习</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>每日学习时长目标</label>
+                                        <select class="form-control">
+                                            <option>30分钟</option>
+                                            <option>1小时</option>
+                                            <option>2小时</option>
+                                            <option>3小时以上</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">保存设置</button>
+                                </form>
+                            </div>
+                            
+                            <div id="history" class="tab-pane">
+                                <div class="history-list">
+                                    <!-- 学习历史将在这里动态生成 -->
+                                </div>
+                            </div>
+                            
+                            <div id="achievements" class="tab-pane">
+                                <div class="achievements-grid">
+                                    <!-- 成就徽章将在这里动态生成 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 加载动画 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>AI正在处理中...</p>
+        </div>
+    </div>
+
+    <!-- Toast 通知 -->
+    <div class="toast" id="toast">
+        <div class="toast-content">
+            <i class="toast-icon"></i>
+            <span class="toast-message"></span>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="js/enhancedFileHandler.js"></script>
+    <script src="js/optimizedQuizHandler.js"></script>
+    <script src="js/advancedMathFixer.js"></script>
+    <script src="js/mathFixer.js"></script>
+    <script src="js/mathRenderer.js"></script>
+    <script src="js/app.js"></script>
+    
+    <script>
+        // 上传提示相关函数
+        function showUploadTips() {
+            document.getElementById('uploadTipsModal').style.display = 'flex';
+        }
+        
+        function hideUploadTips() {
+            document.getElementById('uploadTipsModal').style.display = 'none';
+        }
+        
+        // 点击模态框外部关闭
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('uploadTipsModal');
+            if (e.target === modal) {
+                hideUploadTips();
+            }
+        });
+        
+        // ESC键关闭模态框
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideUploadTips();
+            }
+        });
+    </script>
+</body>
+</html>

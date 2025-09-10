@@ -1,0 +1,165 @@
+/* 数学公式样式 - 支持HTML格式的数学公式显示 */
+
+/* 数学公式容器 */
+.math-formula {
+    display: inline-block;
+    font-family: 'Times New Roman', serif;
+    font-style: italic;
+    color: #2c3e50;
+    margin: 0 2px;
+    vertical-align: baseline;
+}
+
+/* 数学符号 */
+.math-symbol {
+    display: inline;
+    font-family: 'Times New Roman', serif;
+    font-size: 1.1em;
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+/* 分数样式 */
+.fraction {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    margin: 0 3px;
+}
+
+.fraction .numerator {
+    display: block;
+    border-bottom: 1px solid #2c3e50;
+    padding: 0 2px 1px 2px;
+    font-size: 0.9em;
+    line-height: 1;
+}
+
+.fraction .denominator {
+    display: block;
+    padding: 1px 2px 0 2px;
+    font-size: 0.9em;
+    line-height: 1;
+}
+
+/* 上标和下标 */
+sup {
+    font-size: 0.75em;
+    vertical-align: super;
+    line-height: 0;
+}
+
+sub {
+    font-size: 0.75em;
+    vertical-align: sub;
+    line-height: 0;
+}
+
+/* 根号样式 */
+.sqrt {
+    position: relative;
+    display: inline-block;
+    margin: 0 2px;
+}
+
+.sqrt::before {
+    content: '√';
+    font-size: 1.2em;
+    vertical-align: top;
+}
+
+/* 积分符号 */
+.integral {
+    font-size: 1.5em;
+    vertical-align: middle;
+    margin: 0 2px;
+}
+
+/* 求和符号 */
+.sum {
+    font-size: 1.3em;
+    vertical-align: middle;
+    margin: 0 2px;
+}
+
+/* 矩阵样式 */
+.matrix {
+    display: inline-block;
+    vertical-align: middle;
+    border-left: 1px solid #2c3e50;
+    border-right: 1px solid #2c3e50;
+    padding: 2px 4px;
+    margin: 0 2px;
+}
+
+.matrix-row {
+    display: block;
+    text-align: center;
+}
+
+.matrix-element {
+    display: inline-block;
+    margin: 0 4px;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .math-formula {
+        font-size: 0.9em;
+    }
+    
+    .fraction .numerator,
+    .fraction .denominator {
+        font-size: 0.8em;
+    }
+    
+    sup, sub {
+        font-size: 0.7em;
+    }
+}
+
+/* 打印样式 */
+@media print {
+    .math-formula,
+    .math-symbol {
+        color: black !important;
+    }
+    
+    .fraction .numerator {
+        border-bottom-color: black !important;
+    }
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+    .math-formula,
+    .math-symbol {
+        color: black;
+        font-weight: bold;
+    }
+    
+    .fraction .numerator {
+        border-bottom: 2px solid black;
+    }
+}
+
+/* 暗色主题支持 */
+@media (prefers-color-scheme: dark) {
+    .math-formula {
+        color: #ecf0f1;
+    }
+    
+    .math-symbol {
+        color: #e67e22;
+    }
+    
+    .fraction .numerator {
+        border-bottom-color: #ecf0f1;
+    }
+    
+    .matrix {
+        border-color: #ecf0f1;
+    }
+}

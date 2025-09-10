@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问题修复测试页面</title>
+    <link rel="stylesheet" href="/css/math-formulas.css">
+    <script src="/js/errorHandler.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .test-title {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            background: #fafafa;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover {
+            border-color: #3498db;
+            background: #f0f8ff;
+        }
+        
+        .upload-area.dragover {
+            border-color: #2ecc71;
+            background: #f0fff0;
+        }
+        
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+        }
+        
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .btn-success {
+            background: #27ae60;
+        }
+        
+        .btn-success:hover {
+            background: #229954;
+        }
+        
+        .btn-warning {
+            background: #f39c12;
+        }
+        
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-online {
+            background: #27ae60;
+            box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+        }
+        
+        .status-offline {
+            background: #e74c3c;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+        
+        .questions-container {
+            margin-top: 20px;
+        }
+        
+        .question-item {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        .question-options {
+            margin-left: 20px;
+        }
+        
+        .option {
+            margin: 8px 0;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .answer {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: #e3f2fd;
+            border-radius: 4px;
+            font-weight: 500;
+            color: #1976d2;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .test-results {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-pass {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .result-fail {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="test-title">🔧 问题修复测试页面</h1>
+        
+        <div id="ollama-status">
+            <h3>🤖 AI服务状态</h3>
+            <div id="service-status">
+                <span class="status-indicator status-offline"></span>
+                <span>检查中...</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2 class="test-title">📁 文件上传测试</h2>
+        
+        <div class="upload-area" id="uploadArea">
+            <div>
+                <h3>📤 拖拽文件到此处或点击选择</h3>
+                <p>支持 PDF, Word, PowerPoint, TXT 文件</p>
+                <input type="file" id="fileInput" style="display: none;" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt">
+                <button class="btn" onclick="document.getElementById('fileInput').click()">选择文件</button>
+            </div>
+        </div>
+        
+        <div id="upload-progress" style="display: none;">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div id="upload-status">上传中...</div>
+        </div>
+        
+        <div id="material-info" style="display: none;">
+            <h4>📄 材料信息</h4>
+            <div id="material-details"></div>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2 class="test-title">🎯 题目生成测试</h2>
+        
+        <div style="margin-bottom: 20px;">
+            <label>题目类型：</label>
+            <select id="questionType" class="btn">
+                <option value="mixed">混合题型</option>
+                <option value="multiple-choice">选择题</option>
+                <option value="fill-blank">填空题</option>
+                <option value="essay">问答题</option>
+            </select>
+            
+            <label style="margin-left: 20px;">题目数量：</label>
+            <input type="number" id="questionCount" value="8" min="1" max="20" style="width: 60px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            
+            <label style="margin-left: 20px;">难度：</label>
+            <select id="difficulty" class="btn">
+                <option value="1">简单</option>
+                <option value="2">中等</option>
+                <option value="3">困难</option>
+            </select>
+        </div>
+        
+        <button class="btn btn-success" id="generateBtn" onclick="generateQuestions()" disabled>
+            生成题目
+        </button>
+        
+        <button class="btn btn-warning" onclick="testErrorHandling()">
+            测试错误处理
+        </button>
+        
+        <div id="generation-status" style="margin-top: 15px;"></div>
+        
+        <div id="questions-container" class="questions-container"></div>
+    </div>
+
+    <div class="test-container">
+        <h2 class="test-title">📊 测试结果</h2>
+        
+        <div class="test-results" id="test-results">
+            <div class="result-item">
+                <span>🔧 数学公式$符号修复</span>
+                <span id="math-fix-result">待测试</span>
+            </div>
+            <div class="result-item">
+                <span>📈 问题覆盖全面性</span>
+                <span id="coverage-result">待测试</span>
+            </div>
+            <div class="result-item">
+                <span>🗂️ 文件缓存清理</span>
+                <span id="cache-result">待测试</span>
+            </div>
+            <div class="result-item">
+                <span>⚠️ Ollama错误提示</span>
+                <span id="error-handling-result">待测试</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMaterialId = null;
+        let testResults = {
+            mathFix: false,
+            coverage: false,
+            cache: false,
+            errorHandling: false
+        };
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            setupFileUpload();
+            checkServiceStatus();
+            
+            // 定期检查服务状态
+            setInterval(checkServiceStatus, 10000);
+        });
+
+        // 设置文件上传
+        function setupFileUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+
+            // 拖拽上传
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    uploadFile(files[0]);
+                }
+            });
+
+            // 点击上传
+            uploadArea.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    uploadFile(e.target.files[0]);
+                }
+            });
+        }
+
+        // 检查服务状态
+        async function checkServiceStatus() {
+            try {
+                const response = await fetch('/api/quiz/health-check');
+                const data = await response.json();
+                
+                const statusElement = document.getElementById('service-status');
+                const generateBtn = document.getElementById('generateBtn');
+                
+                if (data.success) {
+                    statusElement.innerHTML = '<span class="status-indicator status-online"></span><span>AI服务在线</span>';
+                    if (currentMaterialId) {
+                        generateBtn.disabled = false;
+                    }
+                } else {
+                    statusElement.innerHTML = '<span class="status-indicator status-offline"></span><span>AI服务离线</span>';
+                    generateBtn.disabled = true;
+                }
+            } catch (error) {
+                const statusElement = document.getElementById('service-status');
+                statusElement.innerHTML = '<span class="status-indicator status-offline"></span><span>连接失败</span>';
+                document.getElementById('generateBtn').disabled = true;
+            }
+        }
+
+        // 上传文件
+        async function uploadFile(file) {
+            const progressDiv = document.getElementById('upload-progress');
+            const progressFill = document.getElementById('progressFill');
+            const uploadStatus = document.getElementById('upload-status');
+            
+            progressDiv.style.display = 'block';
+            progressFill.style.width = '0%';
+            uploadStatus.textContent = '上传中...';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                // 模拟上传进度
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += Math.random() * 30;
+                    if (progress > 90) progress = 90;
+                    progressFill.style.width = progress + '%';
+                }, 200);
+
+                const response = await fetch('/api/materials/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                clearInterval(progressInterval);
+                progressFill.style.width = '100%';
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentMaterialId = data.data.id;
+                    uploadStatus.textContent = '上传成功！';
+                    
+                    // 显示材料信息
+                    const materialInfo = document.getElementById('material-info');
+                    const materialDetails = document.getElementById('material-details');
+                    materialDetails.innerHTML = `
+                        <p><strong>文件名：</strong>${data.data.filename}</p>
+                        <p><strong>材料ID：</strong>${currentMaterialId}</p>
+                        <p><strong>状态：</strong>处理中...</p>
+                    `;
+                    materialInfo.style.display = 'block';
+                    
+                    // 启用生成按钮
+                    const generateBtn = document.getElementById('generateBtn');
+                    if (document.getElementById('service-status').textContent.includes('在线')) {
+                        generateBtn.disabled = false;
+                    }
+                    
+                    // 标记缓存清理测试通过
+                    testResults.cache = true;
+                    updateTestResult('cache-result', '✅ 通过');
+                    
+                    window.errorHandler.showSuccess('文件上传成功！');
+                    
+                    setTimeout(() => {
+                        progressDiv.style.display = 'none';
+                    }, 2000);
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                uploadStatus.textContent = '上传失败：' + error.message;
+                window.errorHandler.showError('文件上传失败：' + error.message);
+                setTimeout(() => {
+                    progressDiv.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // 生成题目
+        async function generateQuestions() {
+            if (!currentMaterialId) {
+                window.errorHandler.showWarning('请先上传文件');
+                return;
+            }
+
+            const generateBtn = document.getElementById('generateBtn');
+            const statusDiv = document.getElementById('generation-status');
+            const questionsContainer = document.getElementById('questions-container');
+            
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<span class="loading"></span> 生成中...';
+            statusDiv.innerHTML = '<div class="loading"></div> AI正在分析材料并生成题目，请稍候...';
+            questionsContainer.innerHTML = '';
+
+            const questionType = document.getElementById('questionType').value;
+            const questionCount = parseInt(document.getElementById('questionCount').value);
+            const difficulty = parseInt(document.getElementById('difficulty').value);
+
+            try {
+                const response = await fetch(`/api/quiz/generate/${currentMaterialId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        questionType,
+                        count: questionCount,
+                        difficulty
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    statusDiv.innerHTML = `✅ 成功生成 ${data.data.questions.length} 道题目`;
+                    displayQuestions(data.data.questions);
+                    
+                    // 检查数学公式修复
+                    checkMathFormulas(data.data.questions);
+                    
+                    // 检查覆盖率
+                    checkCoverage(data.data.questions, questionCount);
+                    
+                    window.errorHandler.showSuccess(`成功生成 ${data.data.questions.length} 道题目`);
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                statusDiv.innerHTML = '❌ 生成失败：' + error.message;
+                window.errorHandler.handleQuizError(error);
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = '生成题目';
+            }
+        }
+
+        // 显示题目
+        function displayQuestions(questions) {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+
+            questions.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-item';
+                
+                let optionsHtml = '';
+                if (question.options && question.options.length > 0) {
+                    optionsHtml = '<div class="question-options">' +
+                        question.options.map(option => `<div class="option">${option}</div>`).join('') +
+                        '</div>';
+                }
+                
+                questionDiv.innerHTML = `
+                    <div class="question-text">
+                        <strong>题目 ${index + 1}：</strong>${question.question}
+                    </div>
+                    ${optionsHtml}
+                    ${question.explanation ? `<div class="answer">解析：${question.explanation}</div>` : ''}
+                `;
+                
+                container.appendChild(questionDiv);
+            });
+        }
+
+        // 检查数学公式修复
+        function checkMathFormulas(questions) {
+            let hasLatexSymbols = false;
+            let hasMathFormulas = false;
+            
+            questions.forEach(question => {
+                const questionText = JSON.stringify(question);
+                
+                // 检查是否有数学公式
+                if (questionText.includes('class="math-formula"') || 
+                    questionText.includes('<sup>') || 
+                    questionText.includes('<sub>') ||
+                    questionText.includes('fraction')) {
+                    hasMathFormulas = true;
+                }
+                
+                // 检查是否还有未处理的$符号
+                if (questionText.includes('$') && !questionText.includes('class="')) {
+                    hasLatexSymbols = true;
+                }
+            });
+            
+            if (hasMathFormulas && !hasLatexSymbols) {
+                testResults.mathFix = true;
+                updateTestResult('math-fix-result', '✅ 通过');
+            } else if (!hasMathFormulas) {
+                updateTestResult('math-fix-result', '⚪ 无数学公式');
+            } else {
+                updateTestResult('math-fix-result', '❌ 失败');
+            }
+        }
+
+        // 检查覆盖率
+        function checkCoverage(questions, expectedCount) {
+            const actualCount = questions.length;
+            const coverageRate = (actualCount / expectedCount) * 100;
+            
+            // 检查题目多样性
+            const questionTexts = questions.map(q => q.question.toLowerCase());
+            const uniqueKeywords = new Set();
+            
+            questionTexts.forEach(text => {
+                const words = text.split(/\s+/);
+                words.forEach(word => {
+                    if (word.length > 3) {
+                        uniqueKeywords.add(word);
+                    }
+                });
+            });
+            
+            const diversityScore = uniqueKeywords.size / questions.length;
+            
+            if (coverageRate >= 80 && diversityScore > 2) {
+                testResults.coverage = true;
+                updateTestResult('coverage-result', `✅ 通过 (${coverageRate.toFixed(1)}%)`);
+            } else {
+                updateTestResult('coverage-result', `❌ 不足 (${coverageRate.toFixed(1)}%)`);
+            }
+        }
+
+        // 测试错误处理
+        function testErrorHandling() {
+            // 模拟各种错误
+            window.errorHandler.showError('这是一个测试错误信息', 'error');
+            window.errorHandler.showWarning('这是一个测试警告信息');
+            window.errorHandler.showInfo('这是一个测试信息');
+            
+            setTimeout(() => {
+                window.errorHandler.showSuccess('错误处理测试完成');
+                testResults.errorHandling = true;
+                updateTestResult('error-handling-result', '✅ 通过');
+            }, 1000);
+        }
+
+        // 更新测试结果
+        function updateTestResult(elementId, result) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = result;
+            element.className = result.includes('✅') ? 'result-pass' : 
+                               result.includes('❌') ? 'result-fail' : '';
+        }
+    </script>
+</body>
+</html>

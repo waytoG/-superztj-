@@ -1,0 +1,75 @@
+{
+  "ollama": {
+    "gpu": {
+      "enabled": true,
+      "type": "auto",
+      "memory_limit": "8GB",
+      "compute_capability": "auto"
+    },
+    "performance": {
+      "num_ctx": 4096,
+      "num_batch": 512,
+      "num_gqa": 8,
+      "num_gpu": 1,
+      "num_thread": 8,
+      "repeat_penalty": 1.1,
+      "temperature": 0.7,
+      "top_k": 40,
+      "top_p": 0.9
+    },
+    "timeout": {
+      "generation": 90000,
+      "connection": 30000,
+      "response": 120000
+    },
+    "models": {
+      "primary": "deepseek-r1:7b",
+      "fallback": "qwen2.5:7b",
+      "supported": [
+        "deepseek-r1:7b",
+        "qwen2.5:7b",
+        "llama2:7b",
+        "mistral:7b"
+      ]
+    }
+  },
+  "generation": {
+    "quality_mode": {
+      "enabled": true,
+      "max_retries": 3,
+      "quality_threshold": 0.8,
+      "use_knowledge_graph": true,
+      "concept_extraction": true
+    },
+    "batch_processing": {
+      "enabled": true,
+      "batch_size": 5,
+      "parallel_workers": 2,
+      "queue_timeout": 300000
+    },
+    "caching": {
+      "enabled": true,
+      "ttl": 3600000,
+      "max_entries": 1000,
+      "compression": true
+    }
+  },
+  "exam_paper": {
+    "structure": {
+      "multiple_choice": 10,
+      "fill_in_blank": 10,
+      "short_answer": 5
+    },
+    "difficulty_distribution": {
+      "easy": 0.3,
+      "medium": 0.5,
+      "hard": 0.2
+    },
+    "quality_checks": {
+      "min_question_length": 10,
+      "max_question_length": 200,
+      "avoid_duplicates": true,
+      "concept_coverage": 0.8
+    }
+  }
+}
